@@ -117,7 +117,7 @@ func main() {
 		}
 
 		// m.Attach("/Users/maximshirokov/go/src/gideon/" + fileName)
-		m.Attach("/var/lib/asterisk/gideon/gideon-master" + fileName)
+		m.Attach("/var/lib/asterisk/gideon/gideon-master/" + fileName)
 	}
 
 	d := gomail.NewDialer("smtp.yandex.ru", 587, "comeinservice", "3Nyi*u&z")
