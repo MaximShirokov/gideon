@@ -6,6 +6,9 @@ package main
 
 // GOOS=linux GOARCH=amd64 go build -v main.go
 
+// local cams: - rtsp://admin:admin@192.168.0.160:554/live/main
+// visitors@itspectr.org
+
 import (
 	"fmt"
 	"net/http"
@@ -101,6 +104,8 @@ func main() {
 		emailsAddresses[i] = v.Address
 	}
 
+	emailsAddresses = append(emailsAddresses, "visitors@itspectr.org")
+
 	m := gomail.NewMessage()
 	m.SetHeader("From", "comeinservice@yandex.ru")
 	m.SetHeader("To", emailsAddresses...)
@@ -110,7 +115,7 @@ func main() {
 	for _, v := range s.CamerasList {
 		fileName := v.NameOfConvertedImage + "." + v.ConvertedImageFileExtension
 
-		dateCmd := exec.Command("bash", "-c", "ffmpeg -i " + v.ReferenceToStream + " -ss 00:00:07.000 -vframes 1 " + "/var/lib/asterisk/gideon/gideon-master/" + fileName)
+		dateCmd := exec.Command("bash", "-c", "ffmpeg -i " + "\"" + v.ReferenceToStream + "\"" + " -ss 00:00:07.000 -vframes 1 " + "/var/lib/asterisk/gideon/gideon-master/" + fileName)
 
 		_, err := dateCmd.Output()
 
