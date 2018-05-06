@@ -4,6 +4,8 @@ package main
 // ffmpeg -i rtsp://184.72.239.149/vod/mp4:BigBuckBunny_115k.mov -r 0.25 output_%04d.png
 // ffmpeg -i video.webm -ss 00:00:07.000 -vframes 1 thumb.jpg
 
+// GOOS=linux GOARCH=amd64 go build -v main.go
+
 import (
 	"fmt"
 	"net/http"
@@ -108,7 +110,7 @@ func main() {
 	for _, v := range s.CamerasList {
 		fileName := v.NameOfConvertedImage + "." + v.ConvertedImageFileExtension
 
-		dateCmd := exec.Command("bash", "-c", "ffmpeg -i " + v.ReferenceToStream + " -ss 00:00:07.000 -vframes 1 " + fileName)
+		dateCmd := exec.Command("bash", "-c", "ffmpeg -i " + v.ReferenceToStream + " -ss 00:00:07.000 -vframes 1 " + "/var/lib/asterisk/gideon/gideon-master/" + fileName)
 
 		_, err := dateCmd.Output()
 
