@@ -131,8 +131,8 @@ func main() {
 
 	fmt.Println("email send")
 
-	dateCmd := exec.Command("bash", "-c", "find gideon/gideon-master/ -name \\*.jpg -delete")
-	dateCmd1 := exec.Command("bash", "-c", "find gideon/gideon-master/ -name \\*.png -delete")
+	dateCmd := exec.Command("bash", "-c", "find /var/lib/asterisk/gideon/gideon-master/ -name \\*.jpg -delete")
+	dateCmd1 := exec.Command("bash", "-c", "find /var/lib/asterisk/gideon/gideon-master/ -name \\*.png -delete")
 
 	_, err1 := dateCmd.Output()
 
