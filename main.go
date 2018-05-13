@@ -21,7 +21,8 @@ import (
 )
 
 const (
-	ApiUrl = "http://comeinpro.com/api/v1"
+	APIURL = "http://comeinpro.com/api/v1"
+	// APIURL = "http://localhost:3000/api/v1"
 )
 
 type Data struct {
@@ -66,7 +67,7 @@ func getData(body []byte) (*Data, error) {
 //}
 
 func main() {
-	response, error := http.Get(ApiUrl + "/clients/find_by?sip_phone_number=" + os.Args[1])
+	response, error := http.Get(APIURL + "/clients/find_by?sip_phone_number=" + os.Args[1])
 
 	if error != nil {
 		fmt.Printf("%s", error)
@@ -76,7 +77,7 @@ func main() {
 
 		content, error := ioutil.ReadAll(response.Body)
 
-		if error != nil {
+		if error != nil || string(content) == "{\"message\":\"customer not found\"}" {
 			fmt.Printf("%s", error)
 			os.Exit(1)
 		}
@@ -84,7 +85,7 @@ func main() {
 		fmt.Printf("%s\n", string(content))
 	}
 
-	res, err := http.Get(ApiUrl + "/clients/find_by?sip_phone_number=" + os.Args[1])
+	res, err := http.Get(APIURL + "/clients/find_by?sip_phone_number=" + os.Args[1])
 
 	if err != nil {
 		panic(err.Error())
@@ -98,13 +99,19 @@ func main() {
 
 	s, err := getData([]byte(body))
 
-	emailsAddresses := make([]string, len(s.EmailsList))
+	var emailsAddresses = make([]string, 0)
 
-	for i, v := range s.EmailsList {
-		emailsAddresses[i] = v.Address
+	for _, v := range s.EmailsList {
+		if v.Active {
+			emailsAddresses = append(emailsAddresses, v.Address)
+		}
 	}
 
-	emailsAddresses = append(emailsAddresses, "visitors@itspectr.org")
+	if len(emailsAddresses) > 0 {
+		emailsAddresses = append(emailsAddresses, "visitors@itspectr.org")
+	} else {
+		os.Exit(1)
+	}
 
 	m := gomail.NewMessage()
 	m.SetHeader("From", "comeinservice@yandex.ru")
